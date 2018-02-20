@@ -1,0 +1,18 @@
+API should probably have a _key field or provide the key in each itteration method as param2.
+
+document object cloning param.
+
+in readme, suggest the deepKey pattern as a means for more readable code
+
+need a way to console log object. obj.log();
+
+obj.info() maybe there needs to be an attach info method.
+
+functional-object-assign w/ tests
+
+  // @todo what if a key is invalid, will the reduces return throw an error?
+
+read all no params
+
+this needs a video
+- splice songs in it. metallica and shit.
