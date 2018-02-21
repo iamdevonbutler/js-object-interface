@@ -16,3 +16,8 @@ read all no params
 
 this needs a video
 - splice songs in it. metallica and shit.
+- wait on this, i need my coding acumen to come back. do it when i do brahma videos. ill talk about all the contrib shit.
+
+functional object assign - how does it work w/ arrays?
+
+need to work on a toolshed kinda thing.
