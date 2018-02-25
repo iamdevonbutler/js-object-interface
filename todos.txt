@@ -20,4 +20,10 @@ this needs a video
 
 functional object assign - how does it work w/ arrays?
 
-need to work on a toolshed kinda thing.
+need to work on a toolshed kinda thing. - just make a bunch of repos? use a common tag?
+
+put type checking in its own repo and other stuff.
+
+how to use a common eslintrc across all projects.
+
+travis all repos.

@@ -1,15 +1,17 @@
-# Object interface
+# js-object-interface
 
 Add Array-like methods to plain JS Objects.
 
+The goal here is to make it easier to interact w/ (iterate over) complex data structures.
+
 ## Installation
 ```
-npm i --save object-interface
+npm i --save js-object-interface
 ```
 
 ## Example
 ```javascript
-const applyInterface = require('object-interface');
+const applyInterface = require('js-object-interface');
 const obj = {
   a: 1,
   b: 2,
@@ -24,21 +26,38 @@ $obj.forEach(() => {
 
 ## API
 
-Object methods works *slightly* different from their Array method counterparts - read docs carefully.
+- `.add()`
+- `.remove()`
+- `.get()`
+- `.set()`
+- `.forEach()`
+- `.map()`
+- `.filter()`
+- `.every()`
+- `.some()`
+- `.find()`
+- `.clone()`
+- `.assign()`
+
+API differs from the JS functional Array method API, so pay close attention - the devil is in the details.
+
+copy src and throw it in the docs.
 
 @todo just show examples for each and see if it needs supporitng text.
-### .create()
-
-### .read()
-### .update()
-### .delete()
+### .add()
+### .remove()
+### .get()
+### .set()
 
 ### .forEach()
 ### .map()
+### .filter()
+
 ### .every()
 ### .some()
 ### .find()
-### .filter()
+
+### .clone()
 ### .assign()
 
 * *View src (./lib/index.js) and tests (./tests/main.test.js) for a more detailed understanding of the API.*
