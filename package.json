@@ -1,7 +1,7 @@
 {
   "name": "js-object-interface",
   "version": "0.1.0",
-  "description": "Wrap JS objects to create a functional Array-like interface for iteration and whatnot",
+  "description": "Wrap JS Objects to create a functional Array-like interface for iteration and whatnot",
   "main": "lib/index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --ui bdd --bail --colors ./tests/**/*.js"

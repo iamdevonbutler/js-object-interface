@@ -1,6 +1,6 @@
 # js-object-interface
 
-Add Array-like methods to plain JS Objects.
+Wrap JS Objects to create a functional Array-like interface for iteration and whatnot
 
 The goal here is to make it easier to iterate over, and interact w/, complex data structures.
 
@@ -45,6 +45,7 @@ copy src and throw it in the docs.
 
 @todo just show examples for each and see if it needs supporitng text.
 ### .add()
+bridge props
 ### .remove()
 ### .get()
 ### .set()
