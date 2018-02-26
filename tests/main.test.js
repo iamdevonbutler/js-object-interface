@@ -117,7 +117,7 @@ describe('js-object-interface tests', () => {
         }
       });
     });
-    it ('should wrap objects w/ the interface', () => {
+    it ('should wrap child objects w/ the interface', () => {
       $obj.forEach((value, key, $value) => {
         if (key === 'b') {
           $value.forEach((value1, key1) => {
@@ -128,6 +128,8 @@ describe('js-object-interface tests', () => {
               case 'd':
                 expect(value1 === 3).to.be.true;
                 break;
+              default:
+                throw 'wrong key';
             }
           });
         }
@@ -146,7 +148,42 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.map()', () => {
-
+    it ('should iterate over each value', () => {
+      var result = $obj.map((value, key, $value) => {
+        return 9;
+      });
+      expect(isEqual(result, {a: 9, b: 9, e: 9}))
+    });
+    it ('should wrap child objects w/ the interface', () => {
+      var result = $obj.map((value, key, $value) => {
+        if (key === 'b') {
+          return $value.map((value1, key1) => {
+            switch (key1) {
+              case 'c':
+                return 9;
+              case 'd':
+                return 9;
+              default:
+                throw 'wrong key';
+            }
+          });
+        }
+        else {
+          return value;
+        }
+      });
+      expect(isEqual(result, {a: 1, b: {c: 9, d: 9}, e: [4, 5]})).to.be.true;
+    });
+    it ('should handle async', async () => {
+      var dummy = 0, asyncFunc = new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+       var result = await $obj.map(async (value, key, $value) => {
+         await asyncFunc;
+         return 9;
+      });
+      expect(isEqual(result, {a: 1, b: 1, e: 1}))
+    });
   });
 
   describe('.filter()', () => {

@@ -54,6 +54,7 @@ bridge props
 
 ### .forEach()
 ### .map()
+if you dont want to alter the value just return the `value` prop.
 ### .filter()
 
 ### .every()
