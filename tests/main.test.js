@@ -24,13 +24,13 @@ describe('js-object-interface tests', () => {
   });
   describe('cloning src', () => {
     it('should clone the src obj by default', () => {
-      let obj1 = {a: 1};
+      var obj1 = {a: 1};
       var $obj = applyInterface(obj1);
       $obj.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.true;
     });
     it ('should NOT clone the src obj when passing param2 as false', () => {
-      let obj1 = {a: 1};
+      var obj1 = {a: 1};
       var $obj1 = applyInterface(obj1, false);
       $obj1.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.false;
@@ -62,14 +62,9 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.set()', () => {
-    it ('should throw when missing a value param', () => {
-      try {
-        $obj.set('f');
-        throw 'Above should throw';
-      }
-      catch (e) {
-        expect(e).to.be.an('error');
-      }
+    it ('should update .src given a single param', () => {
+      $obj.set({a: 1});
+      expect(isEqual($obj.src, {a: 1})).to.be.true;
     });
     it ('should set a new property', () => {
       $obj.set('f', 1);
@@ -107,25 +102,51 @@ describe('js-object-interface tests', () => {
   describe('.forEach()', () => {
 
   });
+
   describe('.map()', () => {
 
   });
+
   describe('.filter()', () => {
 
   });
+
   describe('.every()', () => {
 
   });
+
   describe('.find()', () => {
 
   });
+  
   describe('.some()', () => {
 
   });
+
   describe('.clone()', () => {
-
+    it ('should clone .src', () => {
+      var obj1 = $obj.clone();
+      obj1.a = 9;
+      expect(isEqual($obj.src, obj)).to.be.true;
+    });
   });
+
   describe('.assign()', () => {
-
+    it ('should return the src obj given no params', () => {
+      var obj1 = $obj.assign();
+      expect(isEqual(obj1, $obj.src)).to.be.true;
+    });
+    it ('should assign new values', () => {
+      var obj1 = $obj.assign({b: {c: 9}}, {b: {d: 9}});
+      expect(isEqual(obj1, {
+        a: 1,
+        b: {
+          c: 9,
+          d: 9,
+        },
+        e: [4, 5],
+      })).to.be.true;
+    });
   });
+
 });
