@@ -23,5 +23,8 @@
   },
   "dependencies": {
     "js-object-assign": "0.1.0"
+  },
+  "engines": {
+    "node": ">=9.0.0"
   }
 }

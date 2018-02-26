@@ -4,6 +4,8 @@ Wrap JS Objects to create a functional Array-like interface for iteration and wh
 
 The goal here is to make it easier to iterate over, and interact w/, complex data structures.
 
+**engines: node >= 9.x**
+
 ## Installation
 ```
 npm i --save js-object-interface
