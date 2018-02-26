@@ -208,7 +208,31 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.every()', () => {
-
+    it ('should return "true" if all callbacks return "true"', () => {
+      var result = $obj.every((value, key, $value) => {
+        return true;
+      });
+      expect(result === true).to.be.true;
+    });
+    it ('should return "false" if a callback returns "false"', () => {
+      var result = $obj.every((value, key, $value) => {
+        if (key === 'a') return false;
+        return true;
+      });
+      expect(result === false).to.be.true;
+    });
+    it ('should pass in a wrapped value ($value)', () => {
+      var count = 0;
+      $obj.every((value, key, $value) => {
+        if ($value !== undefined) {
+          $value.forEach(value => {
+            count++;
+          });
+        }
+        return true;
+      });
+      expect(count === 2).to.be.true;
+    });
   });
 
   describe('.find()', () => {
