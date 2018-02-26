@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 const assert = require('chai').assert;
 
 // @todos
-// nested filter, does it work right. nested map and forEach too.
+// pass in a wrapped value test for foreach map filter
 
 var $obj, obj;
 
@@ -139,11 +139,22 @@ describe('js-object-interface tests', () => {
       var dummy = 0, asyncFunc = new Promise((resolve) => {
         setTimeout(resolve, 50);
       });
-       await $obj.forEach(async (value, key, $value) => {
-         await asyncFunc;
-         dummy++;
+      await $obj.forEach(async (value, key, $value) => {
+        await asyncFunc;
+        dummy++;
       });
       expect(dummy === 3).to.be.true;
+    });
+    it ('should pass in a wrapped value ($value)', () => {
+      var count = 0;
+      $obj.forEach((value, key, $value) => {
+        if ($value !== undefined) {
+          $value.forEach(value => {
+            count++;
+          });
+        }
+      });
+      expect(count === 2).to.be.true;
     });
   });
 
@@ -179,11 +190,22 @@ describe('js-object-interface tests', () => {
       var dummy = 0, asyncFunc = new Promise((resolve) => {
         setTimeout(resolve, 50);
       });
-       var result = await $obj.map(async (value, key, $value) => {
-         await asyncFunc;
-         return 9;
+      var result = await $obj.map(async (value, key, $value) => {
+        await asyncFunc;
+        return 9;
       });
       expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
+    });
+    it ('should pass in a wrapped value ($value)', () => {
+      var count = 0;
+      $obj.map((value, key, $value) => {
+        if ($value !== undefined) {
+          $value.forEach(value => {
+            count++;
+          });
+        }
+      });
+      expect(count === 2).to.be.true;
     });
   });
 
@@ -199,11 +221,22 @@ describe('js-object-interface tests', () => {
       var dummy = 0, asyncFunc = new Promise((resolve) => {
         setTimeout(resolve, 50);
       });
-       var result = await $obj.filter(async (value, key, $value) => {
-         await asyncFunc;
-         return key === 'a' ? true : false;
+      var result = await $obj.filter(async (value, key, $value) => {
+        await asyncFunc;
+        return key === 'a' ? true : false;
       });
       expect(isEqual(result, {a: 1})).to.be.true;
+    });
+    it ('should pass in a wrapped value ($value)', () => {
+      var count = 0;
+      $obj.filter((value, key, $value) => {
+        if ($value !== undefined) {
+          $value.forEach(value => {
+            count++;
+          });
+        }
+      });
+      expect(count === 2).to.be.true;
     });
   });
 
@@ -235,12 +268,61 @@ describe('js-object-interface tests', () => {
     });
   });
 
-  describe('.find()', () => {
-
+  describe('.some()', () => {
+    it ('should return "true" if one callback returns "true"', () => {
+      var result = $obj.some((value, key, $value) => {
+        if (key === 'a') return true;
+        return false;
+      });
+      expect(result === true).to.be.true;
+    });
+    it ('should return "false" if no callbacks returns "true"', () => {
+      var result = $obj.some((value, key, $value) => {
+        return false;
+      });
+      expect(result === false).to.be.true;
+    });
+    it ('should pass in a wrapped value ($value)', () => {
+      var count = 0;
+      $obj.some((value, key, $value) => {
+        if ($value !== undefined) {
+          $value.forEach(value => {
+            count++;
+          });
+        }
+        return false;
+      });
+      expect(count === 2).to.be.true;
+    });
   });
 
-  describe('.some()', () => {
-
+  describe('.find()', () => {
+    it ('should return an Object when the first callback to return "true"', () => {
+      var {key, value} = $obj.find((value, key, $value) => {
+        return true;
+      });
+      expect(key === 'a').to.be.true;
+      expect(value === 1).to.be.true;
+    });
+    it ('should return "undefined" if all callback returns "false"', () => {
+      var result = $obj.find((value, key, $value) => {
+        return false;
+      });
+      expect(result === undefined).to.be.true;
+    });
+    it ('should pass in a wrapped value ($value)', () => {
+      var count = 0;
+      $obj.find((value, key, $value) => {
+        if ($value !== undefined) {
+          $value.forEach(value => {
+            count++;
+          });
+          return true;
+        }
+        return false;
+      });
+      expect(count === 2).to.be.true;
+    });
   });
 
   describe('.clone()', () => {
