@@ -100,7 +100,49 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.forEach()', () => {
-
+    it ('should iterate over each value', () => {
+      $obj.forEach((value, key, $value) => {
+        switch (key) {
+          case 'a':
+            expect(value === 1).to.be.true;
+            break;
+          case 'b':
+            expect(isEqual(value, {c: 2, d: 3})).to.be.true;
+            break;
+          case 'e':
+            expect(isEqual(value, [4,5])).to.be.true;
+            break;
+          default:
+            throw 'unknown key';
+        }
+      });
+    });
+    it ('should wrap objects w/ the interface', () => {
+      $obj.forEach((value, key, $value) => {
+        if (key === 'b') {
+          $value.forEach((value1, key1) => {
+            switch (key1) {
+              case 'c':
+                expect(value1 === 2).to.be.true;
+                break;
+              case 'd':
+                expect(value1 === 3).to.be.true;
+                break;
+            }
+          });
+        }
+      });
+    });
+    it ('should handle async', async () => {
+      var dummy = 0, asyncFunc = new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+       await $obj.forEach(async (value, key, $value) => {
+         await asyncFunc;
+         dummy++;
+      });
+      expect(dummy === 3).to.be.true;
+    });
   });
 
   describe('.map()', () => {
@@ -118,7 +160,7 @@ describe('js-object-interface tests', () => {
   describe('.find()', () => {
 
   });
-  
+
   describe('.some()', () => {
 
   });
