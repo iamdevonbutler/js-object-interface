@@ -148,11 +148,12 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.map()', () => {
-    it ('should iterate over each value', () => {
+    it ('should iterate over each value w/o modifying src', () => {
       var result = $obj.map((value, key, $value) => {
         return 9;
       });
-      expect(isEqual(result, {a: 9, b: 9, e: 9}))
+      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
+      expect(isEqual($obj.src, obj)).to.be.true;
     });
     it ('should wrap child objects w/ the interface', () => {
       var result = $obj.map((value, key, $value) => {
@@ -182,12 +183,28 @@ describe('js-object-interface tests', () => {
          await asyncFunc;
          return 9;
       });
-      expect(isEqual(result, {a: 1, b: 1, e: 1}))
+      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
     });
   });
 
   describe('.filter()', () => {
-
+    it ('should iterate over each value and filter w/o modifying src', () => {
+      var result = $obj.filter((value, key, $value) => {
+        if (key === 'a') return true;
+      });
+      expect(isEqual(result, {a: 1})).to.be.true;
+      expect(isEqual($obj.src, obj)).to.be.true;
+    });
+    it ('should handle async', async () => {
+      var dummy = 0, asyncFunc = new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+       var result = await $obj.filter(async (value, key, $value) => {
+         await asyncFunc;
+         return key === 'a' ? true : false;
+      });
+      expect(isEqual(result, {a: 1})).to.be.true;
+    });
   });
 
   describe('.every()', () => {
