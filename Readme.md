@@ -18,20 +18,26 @@ const applyInterface = require('js-object-interface');
 const obj = {a: 1,b: 2};
 var $obj = applyInterface(obj);
 
-$obj.get('key', 'nestedKey');
+$obj.get('key');
+$obj.get('key', 'nestedKey', ...);
+$obj.set('key', 'value');
 $obj.set('key', 'nestedKey', 'value');
+$obj.remove('key');
 $obj.remove('key', 'nestedKey');
 
 $obj.forEach(() => {});
+$obj.forEach(async () => {});
 $obj.map(() => {});
+$obj.map(async () => {});
 $obj.filter(() => {});
+$obj.filter(async () => {});
 
 $obj.find(() => {});
 $obj.every(() => {});
 $obj.some(() => {});
 
-$obj.clone(() => {});
-$obj.assign(() => {});
+$obj.clone(wrap = false);
+$obj.assign({a: 1}, {a: 2}, ...);
 ```
 
 ## API
@@ -65,9 +71,9 @@ $obj.get('c', 'd') // returns 3
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
 
-$obj.set({e: 1}) // replaces the entire src obj w/ {e: 1}
+$obj.set({e: 1}) // replaces the entire .src obj w/ {e: 1}
 $obj.set('a', 2)
-$obj.set('c', 'd', 4) // returns 1
+$obj.set('c', 'd', 4)
 $obj.set('e', 'f', 5) // adds property "e" as an Object w/ an "f" property === 5
 ```
 
@@ -92,6 +98,7 @@ $obj.forEach((value, key, $value) => {
   // $value: undefined, undefined, $obj
 });
 
+// Nested .forEach()
 $obj.forEach((value, key, $value) => {
   if ($value !== undefined) { // $value is not undefined when key === 'c'
     $value.forEach((value, key) => {
@@ -101,6 +108,7 @@ $obj.forEach((value, key, $value) => {
   }
 });
 
+// Async .forEach()
 console.log(1);
 await $obj.forEach(async (value, key, $value) => {
   await asyncOperation;
@@ -113,7 +121,7 @@ console.log(3);
 ### .map()
 `.map()` does not modify the .src Object - it returns a new Object.
 
-If you don't want to modify a property, just return the `value` prop.
+If you don't want to modify a property's value, be sure return the `value` property.
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
@@ -123,6 +131,7 @@ var result = $obj.map((value, key, $value) => {
 }); // result === {a: 1, b: 2, c: {d: 3}}
 
 
+// Nested .map()
 var result = $obj.map((value, key, $value) => {
   if ($value !== undefined) { // $value is not undefined when key === 'c'
     return $value.map((value, key) => {
@@ -130,8 +139,9 @@ var result = $obj.map((value, key, $value) => {
     });
   }
   return value;
-});
+}); // result === {a: 1, b: 2, c: {d: 3}}
 
+// Async .map()
 console.log(1);
 var result = await $obj.map(async (value, key, $value) => {
   await asyncOperation;
@@ -154,6 +164,7 @@ var result = $obj.filter((value, key, $value) => {
   return true;
 }); // result === {a: 1, b: 2, c: {d: 3}}
 
+// Async .filter()
 console.log(1);
 var result = await $obj.filter(async (value, key, $value) => {
   await asyncOperation;
@@ -186,9 +197,7 @@ var result = $obj.some((value, key, $value) => {
 }); // result === true.
 ```
 ### .find()
-`.find()` iterates over each Object property and returns the first property where the callback returns a truthy value.
-
-The "key", "value", and "$value", are returned encapsulated in an Object, and if no matches are found, `undefined` is returned.
+`.find()` iterates over each Object property and returns the first property where the callback returns a "truthy" value.
 
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
@@ -198,6 +207,7 @@ var {key, value, $value} = $obj.find((value, key, $value) => {
   return true;
 });
 ```
+The `key`, `value`, and `$value` callback params, are returned encapsulated in an Object, and if no matches are found, `undefined` is returned.
 
 ### .clone()
 Returns a copy of the .src object.
@@ -209,7 +219,7 @@ var obj1 = $obj.clone();
 var obj1 = $obj.clone(wrap = true); // wraps obj1 in an interface.
 ```
 ### .assign()
-Returns a new Object. .src Object inherits all deeply assigned param Objects.
+Returns a new Object.
 
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
