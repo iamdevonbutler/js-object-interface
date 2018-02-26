@@ -37,14 +37,30 @@ describe('js-object-interface tests', () => {
       expect(isEqual(obj1, {a: 1, b: 2})).to.be.true;
     });
   });
+
   describe('.src', () => {
     it('should return the original object', () => {
       expect(isEqual($obj.src, obj)).to.be.true;
     });
   });
-  describe('.get()', () => {
 
+  describe('.get()', () => {
+    it ('should return "undefined" given no params', () => {
+      expect($obj.get() === undefined).to.be.true;
+    });
+    it ('should return "undefined" given invalid keys', () => {
+      expect($obj.get('z') === undefined).to.be.true;
+      expect($obj.get('a', 'z') === undefined).to.be.true;
+      expect($obj.get('b', 'z') === undefined).to.be.true;
+    });
+    it ('should get a property', () => {
+      expect($obj.get('a') === 1).to.be.true;
+    });
+    it ('should get a nested property', () => {
+      expect($obj.get('b', 'c') === 2).to.be.true;
+    });
   });
+  
   describe('.set()', () => {
 
   });
