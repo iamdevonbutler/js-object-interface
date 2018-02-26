@@ -2,7 +2,7 @@
 
 Add Array-like methods to plain JS Objects.
 
-The goal here is to make it easier to interact w/ (iterate over) complex data structures.
+The goal here is to make it easier to iterate over, and interact w/, complex data structures.
 
 ## Installation
 ```
@@ -26,6 +26,8 @@ $obj.forEach(() => {
 
 ## API
 
+API differs from the JS functional Array method API, so pay close attention - the devil is in the details.
+
 - `.add()`
 - `.remove()`
 - `.get()`
@@ -38,8 +40,6 @@ $obj.forEach(() => {
 - `.find()`
 - `.clone()`
 - `.assign()`
-
-API differs from the JS functional Array method API, so pay close attention - the devil is in the details.
 
 copy src and throw it in the docs.
 
@@ -66,10 +66,14 @@ plug function-properties module.
 
 * the usege of undefined, use null to represent no value or else there will be errors w/ select and such.
 
+## @todos
+async documentation
+using assign|filter then update to update src.
+nested iteration methods
+
 ## Performance
 
-Now I wouldn't consider the module to be a performance bottleneck, but I should mention that it is
-not optimized for high-performance applications.
+Now I wouldn't consider the module to be a performance bottleneck, but I should mention that it is not optimized for high-performance applications.
 
 ## License
 MIT
