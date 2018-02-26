@@ -44,11 +44,11 @@ API differs from the JS functional Array method API, so pay close attention - th
 copy src and throw it in the docs.
 
 @todo just show examples for each and see if it needs supporitng text.
-### .add()
-bridge props
-### .remove()
+
 ### .get()
 ### .set()
+bridge props
+### .remove()
 
 ### .forEach()
 ### .map()

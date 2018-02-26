@@ -26,13 +26,13 @@ describe('js-object-interface tests', () => {
     it('should clone the src obj by default', () => {
       let obj1 = {a: 1};
       var $obj = applyInterface(obj1);
-      $obj.add('b', 2);
+      $obj.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.true;
     });
     it ('should NOT clone the src obj when passing param2 as false', () => {
       let obj1 = {a: 1};
       var $obj1 = applyInterface(obj1, false);
-      $obj1.add('b', 2);
+      $obj1.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.false;
       expect(isEqual(obj1, {a: 1, b: 2})).to.be.true;
     });
@@ -60,10 +60,35 @@ describe('js-object-interface tests', () => {
       expect($obj.get('b', 'c') === 2).to.be.true;
     });
   });
-  
-  describe('.set()', () => {
 
+  describe('.set()', () => {
+    it ('should throw when missing a value param', () => {
+      try {
+        $obj.set('f');
+        throw 'Above should throw';
+      }
+      catch (e) {
+        expect(e).to.be.an('error');
+      }
+    });
+    it ('should set a new property', () => {
+      $obj.set('f', 1);
+      expect($obj.src.f === 1).to.be.true;
+    });
+    it ('should updated a top-level property', () => {
+      $obj.set('a', 2);
+      expect($obj.src.a === 2).to.be.true;
+    });
+    it ('should set a new nested property and create bridge properties', () => {
+      $obj.set('f', 'g', 1);
+      expect($obj.src.f.g === 1).to.be.true;
+    });
+    it ('should update an existing nested property', () => {
+      $obj.set('b', 'c', 3);
+      expect($obj.src.b.c === 3).to.be.true;
+    });
   });
+
   describe('.remove()', () => {
     it ('should remove a property', () => {
       $obj.remove('f');
@@ -78,25 +103,7 @@ describe('js-object-interface tests', () => {
       $obj.remove('k');
     });
   });
-  describe('.add()', () => {
-    it ('should throw when missing a value', () => {
-      try {
-        $obj.add('f');
-        throw 'Above should throw';
-      }
-      catch (e) {
-        expect(e).to.be.an('error');
-      }
-    });
-    it ('should add a property', () => {
-      $obj.add('f', 1);
-      expect($obj.src.f === 1).to.be.true;
-    });
-    it ('should add a nested property and create bridge properties', () => {
-      $obj.add('f', 'g', 1);
-      expect($obj.src.f.g === 1).to.be.true;
-    });
-  });
+
   describe('.forEach()', () => {
 
   });
