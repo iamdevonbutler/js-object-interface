@@ -5,9 +5,6 @@ const should = require('chai').should();
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 
-// @todos
-// pass in a wrapped value test for foreach map filter
-
 var $obj, obj;
 
 describe('js-object-interface tests', () => {
@@ -85,6 +82,10 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.remove()', () => {
+    it ('should do nothing given no params', () => {
+      $obj.remove();
+      expect(isEqual($obj.src, obj)).to.be.true;
+    });
     it ('should remove a property', () => {
       $obj.remove('f');
       expect($obj.src.f === undefined).to.be.true;
@@ -329,6 +330,12 @@ describe('js-object-interface tests', () => {
     it ('should clone .src', () => {
       var obj1 = $obj.clone();
       obj1.a = 9;
+      expect(isEqual($obj.src, obj)).to.be.true;
+    });
+    it ('should clone .src and wrap if param1 is "true"', () => {
+      var $obj1 = $obj.clone(true);
+      $obj1.set('a', 9);
+      expect($obj1.get('a') === 9).to.be.true;
       expect(isEqual($obj.src, obj)).to.be.true;
     });
   });
