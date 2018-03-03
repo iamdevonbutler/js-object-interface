@@ -19,7 +19,8 @@ describe('js-object-interface tests', () => {
     };
     $obj = applyInterface(obj);
   });
-  describe('cloning src', () => {
+
+  describe('cloning .src', () => {
     it('should clone the src obj by default', () => {
       var obj1 = {a: 1};
       var $obj = applyInterface(obj1);
@@ -42,8 +43,8 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.get()', () => {
-    it ('should return "undefined" given no params', () => {
-      expect($obj.get() === undefined).to.be.true;
+    it ('should return the .src Obj given no params', () => {
+      expect(isEqual($obj.get(), obj)).to.be.true;
     });
     it ('should return "undefined" given invalid keys', () => {
       expect($obj.get('z') === undefined).to.be.true;
@@ -61,7 +62,7 @@ describe('js-object-interface tests', () => {
   describe('.set()', () => {
     it ('should update .src given a single param', () => {
       $obj.set({a: 1});
-      expect(isEqual($obj.src, {a: 1})).to.be.true;
+      expect(isEqual($obj.get(), {a: 1})).to.be.true;
     });
     it ('should set a new property', () => {
       $obj.set('f', 1);
@@ -146,28 +147,24 @@ describe('js-object-interface tests', () => {
       });
       expect(dummy === 3).to.be.true;
     });
-    it ('should pass in a wrapped value ($value)', () => {
-      var count = 0;
-      $obj.forEach((value, key, $value) => {
-        if ($value !== undefined) {
-          $value.forEach(value => {
-            count++;
-          });
-        }
-      });
-      expect(count === 2).to.be.true;
-    });
   });
 
   describe('.map()', () => {
-    it ('should iterate over each value w/o modifying src', () => {
+    it ('should iterate over each value w/o modifying src and return a wrapped obj', () => {
       var result = $obj.map((value, key, $value) => {
         return 9;
       });
-      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
+      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.false;
+      expect(isEqual(result.get(), {a: 9, b: 9, e: 9})).to.be.true;
       expect(isEqual($obj.src, obj)).to.be.true;
     });
-    it ('should wrap child objects w/ the interface', () => {
+    it ('should iterate over each valueand return an "unwrapped" obj when param2 === "false"', () => {
+      var result = $obj.map((value, key, $value) => {
+        return 9;
+      }, false);
+      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
+    });
+    it ('should wrap child objects w/ the interface using "$value"', () => {
       var result = $obj.map((value, key, $value) => {
         if (key === 'b') {
           return $value.map((value1, key1) => {
@@ -179,12 +176,12 @@ describe('js-object-interface tests', () => {
               default:
                 throw 'wrong key';
             }
-          });
+          }).get();
         }
         else {
           return value;
         }
-      });
+      }).get();
       expect(isEqual(result, {a: 1, b: {c: 9, d: 9}, e: [4, 5]})).to.be.true;
     });
     it ('should handle async', async () => {
@@ -194,29 +191,25 @@ describe('js-object-interface tests', () => {
       var result = await $obj.map(async (value, key, $value) => {
         await asyncFunc;
         return 9;
-      });
+      }, false);
       expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
-    });
-    it ('should pass in a wrapped value ($value)', () => {
-      var count = 0;
-      $obj.map((value, key, $value) => {
-        if ($value !== undefined) {
-          $value.forEach(value => {
-            count++;
-          });
-        }
-      });
-      expect(count === 2).to.be.true;
     });
   });
 
   describe('.filter()', () => {
-    it ('should iterate over each value and filter w/o modifying src', () => {
+    it ('should iterate over each value and filter w/o modifying src and return a wrapped Object', () => {
       var result = $obj.filter((value, key, $value) => {
         if (key === 'a') return true;
       });
-      expect(isEqual(result, {a: 1})).to.be.true;
+      expect(isEqual(result, {a: 1})).to.be.false;
+      expect(isEqual(result.get(), {a: 1})).to.be.true;
       expect(isEqual($obj.src, obj)).to.be.true;
+    });
+    it ('should iterate over each value and return an "unwrapped" obj when param2 === "false"', () => {
+      var result = $obj.filter((value, key, $value) => {
+        if (key === 'a') return true;
+      }, false);
+      expect(isEqual(result, {a: 1})).to.be.true;
     });
     it ('should handle async', async () => {
       var dummy = 0, asyncFunc = new Promise((resolve) => {
@@ -225,7 +218,7 @@ describe('js-object-interface tests', () => {
       var result = await $obj.filter(async (value, key, $value) => {
         await asyncFunc;
         return key === 'a' ? true : false;
-      });
+      }, false);
       expect(isEqual(result, {a: 1})).to.be.true;
     });
     it ('should pass in a wrapped value ($value)', () => {

@@ -18,17 +18,23 @@ const applyInterface = require('js-object-interface');
 const obj = {a: 1,b: 2};
 var $obj = applyInterface(obj);
 
+$obj.get();
 $obj.get('key');
 $obj.get('key', 'nestedKey', ...);
+
+$obj.set('value');
 $obj.set('key', 'value');
 $obj.set('key', 'nestedKey', 'value');
+
 $obj.remove('key');
 $obj.remove('key', 'nestedKey');
 
 $obj.forEach(() => {});
 $obj.forEach(async () => {});
+
 $obj.map(() => {});
 $obj.map(async () => {});
+
 $obj.filter(() => {});
 $obj.filter(async () => {});
 
@@ -71,7 +77,7 @@ $obj.get('c', 'd') // returns 3
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
 
-$obj.set({e: 1}) // replaces the entire .src obj w/ {e: 1}
+$obj.set({e: 1}) // replaces the .src obj w/ {e: 1}. Returns `this`
 $obj.set('a', 2)
 $obj.set('c', 'd', 4)
 $obj.set('e', 'f', 5) // adds property "e" as an Object w/ an "f" property === 5
@@ -121,25 +127,30 @@ console.log(3);
 ### .map()
 `.map()` does not modify the .src Object - it returns a new Object.
 
-If you don't want to modify a property's value, be sure return the `value` property.
+"param2" [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
+
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
 
 var result = $obj.map((value, key, $value) => {
   return value;
-}); // result === {a: 1, b: 2, c: {d: 3}}
+}, false); // result === {a: 1, b: 2, c: {d: 3}}. Without `false`, a wrapped Object is returned.
 
 
 // Nested .map()
-var result = $obj.map((value, key, $value) => {
-  if ($value !== undefined) { // $value is not undefined when key === 'c'
-    return $value.map((value, key) => {
-      return value;
-    });
-  }
-  return value;
-}); // result === {a: 1, b: 2, c: {d: 3}}
+var result = $obj
+  .map((value, key, $value) => {
+    if ($value !== undefined) { // $value is not undefined when key === 'c'
+      return $value
+        .map((value, key) => {
+          return value;
+        })
+        .get(); // .get() returns the .src Object - otherwise, the result is wrapped in an interface.
+    }
+    return value;
+  })
+  .get(); // result === {a: 1, b: 2, c: {d: 3}}
 
 // Async .map()
 console.log(1);
@@ -147,7 +158,7 @@ var result = await $obj.map(async (value, key, $value) => {
   await asyncOperation;
   console.log(2);
   return value;
-});
+}, false); // `false` here returns a plain Object, w/o `false`, a wrapped Object is returned.
 console.log(3);
 // result === {a: 1, b: 2, c: {d: 3}}
 // Logs 1, 2, 2, 2, 3
@@ -156,13 +167,16 @@ console.log(3);
 ### .filter()
 `.filter()` does not modify the .src Object - it returns a new Object.
 
+"param2" [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
 
-var result = $obj.filter((value, key, $value) => {
-  return true;
-}); // result === {a: 1, b: 2, c: {d: 3}}
+var result = $obj
+  .filter((value, key, $value) => {
+    return true;
+  })
+  .get(); // result === {a: 1, b: 2, c: {d: 3}}
 
 // Async .filter()
 console.log(1);
@@ -170,7 +184,7 @@ var result = await $obj.filter(async (value, key, $value) => {
   await asyncOperation;
   console.log(2);
   return true;
-});
+}, false); // `false` here returns a plain Object, w/o `false`, a wrapped Object is returned.
 console.log(3);
 // result === {a: 1, b: 2, c: {d: 3}}
 // Logs 1, 2, 2, 2, 3
