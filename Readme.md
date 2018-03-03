@@ -77,7 +77,7 @@ $obj.get('c', 'd') // returns 3
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
 
-$obj.set({e: 1}) // replaces the .src obj w/ {e: 1}. Returns `this`
+$obj.set({e: 1}) // replaces the .src obj w/ {e: 1}. Returns `this`.
 $obj.set('a', 2)
 $obj.set('c', 'd', 4)
 $obj.set('e', 'f', 5) // adds property "e" as an Object w/ an "f" property === 5
@@ -102,7 +102,7 @@ $obj.forEach((value, key, $value) => {
   // value: 1,2, {d: 3}
   // key: 'a', 'b', 'c
   // $value: undefined, undefined, $obj
-});
+}); // returns `this`.
 
 // Nested .forEach()
 $obj.forEach((value, key, $value) => {
@@ -127,7 +127,7 @@ console.log(3);
 ### .map()
 `.map()` does not modify the .src Object - it returns a new Object.
 
-"param2" [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
+**"param2"** [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
 
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
@@ -167,7 +167,7 @@ console.log(3);
 ### .filter()
 `.filter()` does not modify the .src Object - it returns a new Object.
 
-"param2" [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
+**"param2"** [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
