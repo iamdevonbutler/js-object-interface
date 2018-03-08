@@ -1,1 +1,1 @@
-needs an addMethod() method to add custom methods.
+

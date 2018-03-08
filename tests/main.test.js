@@ -150,19 +150,18 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.map()', () => {
-    it ('should iterate over each value w/o modifying src and return a wrapped obj', () => {
+    it ('should iterate over each value w/o modifying src and return a "unwrapped" obj', () => {
       var result = $obj.map((value, key, $value) => {
         return 9;
       });
-      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.false;
-      expect(isEqual(result.get(), {a: 9, b: 9, e: 9})).to.be.true;
+      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
       expect(isEqual($obj.src, obj)).to.be.true;
     });
-    it ('should iterate over each valueand return an "unwrapped" obj when param2 === "false"', () => {
+    it ('should iterate over each value and return an "wrapped" obj when param2 === "true"', () => {
       var result = $obj.map((value, key, $value) => {
         return 9;
-      }, false);
-      expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
+      }, true);
+      expect(isEqual(result.get(), {a: 9, b: 9, e: 9})).to.be.true;
     });
     it ('should wrap child objects w/ the interface using "$value"', () => {
       var result = $obj.map((value, key, $value) => {
@@ -176,13 +175,19 @@ describe('js-object-interface tests', () => {
               default:
                 throw 'wrong key';
             }
-          }).get();
+          });
         }
         else {
           return value;
         }
-      }).get();
+      });
       expect(isEqual(result, {a: 1, b: {c: 9, d: 9}, e: [4, 5]})).to.be.true;
+    });
+    it ('should return "null" when mapping over an empty object', () => {
+      var result = applyInterface({}).map((value, key, $value) => {
+        return false;
+      });
+      expect(isEqual(result, null)).to.be.true;
     });
     it ('should handle async', async () => {
       var dummy = 0, asyncFunc = new Promise((resolve) => {
@@ -191,25 +196,30 @@ describe('js-object-interface tests', () => {
       var result = await $obj.map(async (value, key, $value) => {
         await asyncFunc;
         return 9;
-      }, false);
+      });
       expect(isEqual(result, {a: 9, b: 9, e: 9})).to.be.true;
     });
   });
 
   describe('.filter()', () => {
-    it ('should iterate over each value and filter w/o modifying src and return a wrapped Object', () => {
+    it ('should iterate over each value and filter w/o modifying src and return a "unwrapped" Object', () => {
       var result = $obj.filter((value, key, $value) => {
         if (key === 'a') return true;
       });
-      expect(isEqual(result, {a: 1})).to.be.false;
-      expect(isEqual(result.get(), {a: 1})).to.be.true;
+      expect(isEqual(result, {a: 1})).to.be.true;
       expect(isEqual($obj.src, obj)).to.be.true;
     });
-    it ('should iterate over each value and return an "unwrapped" obj when param2 === "false"', () => {
+    it ('should iterate over each value and return an "wrapped" obj when param2 === "true"', () => {
       var result = $obj.filter((value, key, $value) => {
         if (key === 'a') return true;
-      }, false);
-      expect(isEqual(result, {a: 1})).to.be.true;
+      }, true);
+      expect(isEqual(result.get(), {a: 1})).to.be.true;
+    });
+    it ('should return "null" when all callbacks return "false"', () => {
+      var result = $obj.filter((value, key, $value) => {
+        return false;
+      });
+      expect(isEqual(result, null)).to.be.true;
     });
     it ('should handle async', async () => {
       var dummy = 0, asyncFunc = new Promise((resolve) => {
@@ -218,7 +228,7 @@ describe('js-object-interface tests', () => {
       var result = await $obj.filter(async (value, key, $value) => {
         await asyncFunc;
         return key === 'a' ? true : false;
-      }, false);
+      });
       expect(isEqual(result, {a: 1})).to.be.true;
     });
     it ('should pass in a wrapped value ($value)', () => {
@@ -291,12 +301,11 @@ describe('js-object-interface tests', () => {
   });
 
   describe('.find()', () => {
-    it ('should return an Object when the first callback to return "true"', () => {
-      var {key, value} = $obj.find((value, key, $value) => {
+    it ('should return an Object key when first callback to return "true"', () => {
+      var key = $obj.find((value, key, $value) => {
         return true;
       });
       expect(key === 'a').to.be.true;
-      expect(value === 1).to.be.true;
     });
     it ('should return "undefined" if all callback returns "false"', () => {
       var result = $obj.find((value, key, $value) => {

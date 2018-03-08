@@ -127,7 +127,7 @@ console.log(3);
 ### .map()
 `.map()` does not modify the .src Object - it returns a new Object.
 
-**"param2"** [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
+**"param2"** [wrapResult=false] wraps the result in an interface.
 
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
@@ -135,22 +135,19 @@ var $obj = applyInterface(obj);
 
 var result = $obj.map((value, key, $value) => {
   return value;
-}, false); // result === {a: 1, b: 2, c: {d: 3}}. Without `false`, a wrapped Object is returned.
+}); // result === {a: 1, b: 2, c: {d: 3}}.
 
 
 // Nested .map()
-var result = $obj
-  .map((value, key, $value) => {
-    if ($value !== undefined) { // $value is not undefined when key === 'c'
-      return $value
-        .map((value, key) => {
-          return value;
-        })
-        .get(); // .get() returns the .src Object - otherwise, the result is wrapped in an interface.
-    }
-    return value;
-  })
-  .get(); // result === {a: 1, b: 2, c: {d: 3}}
+var result = $obj.map((value, key, $value) => {
+  if ($value !== undefined) { // $value is not undefined when key === 'c'
+    return $value
+      .map((value, key) => {
+        return value;
+      });
+  }
+  return value;
+}) // result === {a: 1, b: 2, c: {d: 3}}
 
 // Async .map()
 console.log(1);
@@ -158,7 +155,7 @@ var result = await $obj.map(async (value, key, $value) => {
   await asyncOperation;
   console.log(2);
   return value;
-}, false); // `false` here returns a plain Object, w/o `false`, a wrapped Object is returned.
+});
 console.log(3);
 // result === {a: 1, b: 2, c: {d: 3}}
 // Logs 1, 2, 2, 2, 3
@@ -167,7 +164,9 @@ console.log(3);
 ### .filter()
 `.filter()` does not modify the .src Object - it returns a new Object.
 
-**"param2"** [wrapResult=true] wraps the result in an interface, set to `false` to return a plain Object.
+**"param2"** [wrapResult=false] wraps the result in an interface.
+
+If all callbacks return `false`, `null` is returned.
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
@@ -175,8 +174,7 @@ var $obj = applyInterface(obj);
 var result = $obj
   .filter((value, key, $value) => {
     return true;
-  })
-  .get(); // result === {a: 1, b: 2, c: {d: 3}}
+  }); // result === {a: 1, b: 2, c: {d: 3}}
 
 // Async .filter()
 console.log(1);
@@ -184,7 +182,7 @@ var result = await $obj.filter(async (value, key, $value) => {
   await asyncOperation;
   console.log(2);
   return true;
-}, false); // `false` here returns a plain Object, w/o `false`, a wrapped Object is returned.
+});
 console.log(3);
 // result === {a: 1, b: 2, c: {d: 3}}
 // Logs 1, 2, 2, 2, 3
@@ -213,15 +211,16 @@ var result = $obj.some((value, key, $value) => {
 ### .find()
 `.find()` iterates over each Object property and returns the first property where the callback returns a "truthy" value.
 
+If no matches are found, `undefined` is returned.
+
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
 
-var {key, value, $value} = $obj.find((value, key, $value) => {
+var key = $obj.find((value, key, $value) => {
   return true;
 });
 ```
-The `key`, `value`, and `$value` callback params, are returned encapsulated in an Object, and if no matches are found, `undefined` is returned.
 
 ### .clone()
 Returns a copy of the .src object.
