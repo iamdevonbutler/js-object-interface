@@ -328,6 +328,21 @@ describe('js-object-interface tests', () => {
     });
   });
 
+  describe('.keys()', () => {
+    it ('should return the keys of the .src Object given no params', () => {
+      var obj1 = $obj.keys();
+      expect(isEqual(obj1, Object.keys(obj))).to.be.true;
+    });
+    it ('should return the nested keys of the .src Object given a property key', () => {
+      var obj1 = $obj.keys('b');
+      expect(isEqual(obj1, Object.keys(obj.b))).to.be.true;
+    });
+    it ('should return "null" given an invalid key', () => {
+      var obj1 = $obj.keys('z');
+      expect(obj1 === null).to.be.true;
+    });
+  });
+
   describe('.clone()', () => {
     it ('should clone .src', () => {
       var obj1 = $obj.clone();

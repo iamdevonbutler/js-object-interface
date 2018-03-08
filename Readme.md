@@ -42,6 +42,7 @@ $obj.find(() => {});
 $obj.every(() => {});
 $obj.some(() => {});
 
+$obj.keys();
 $obj.clone(wrap = false);
 $obj.assign({a: 1}, {a: 2}, ...);
 ```
@@ -59,6 +60,7 @@ API differs from the JS functional Array method API, so pay close attention - th
 - `.every()`
 - `.some()`
 - `.find()`
+- `.keys()`
 - `.clone()`
 - `.assign()`
 
@@ -222,8 +224,18 @@ var key = $obj.find((value, key, $value) => {
 }); // key === 'a'
 ```
 
+### .keys()
+Returns `Object.keys()` on the .src Object or a nested property.
+```javascript
+const obj = {a: 1, b: 2, c: {d: 3}};
+var $obj = applyInterface(obj);
+$obj.keys(); // ['a', 'b', 'c']
+$obj.keys('c'); // ['d']
+$obj.keys('c', 'z'); // null
+```
+
 ### .clone()
-Returns a copy of the .src object.
+Returns a recursive (deep) copy of the .src object.
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
@@ -232,7 +244,7 @@ var obj1 = $obj.clone();
 var obj1 = $obj.clone(wrap = true); // wraps obj1 in an interface.
 ```
 ### .assign()
-Returns a new Object.
+Returns a new Object (deep assign).
 
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
