@@ -219,7 +219,7 @@ var $obj = applyInterface(obj);
 
 var key = $obj.find((value, key, $value) => {
   return true;
-});
+}); // key === 'a'
 ```
 
 ### .clone()
