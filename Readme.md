@@ -229,6 +229,7 @@ Returns `Object.keys()` on the .src Object or a nested property.
 ```javascript
 const obj = {a: 1, b: 2, c: {d: 3}};
 var $obj = applyInterface(obj);
+
 $obj.keys(); // ['a', 'b', 'c']
 $obj.keys('c'); // ['d']
 $obj.keys('c', 'z'); // null
