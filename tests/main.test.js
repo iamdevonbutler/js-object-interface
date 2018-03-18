@@ -373,6 +373,12 @@ describe('js-object-interface tests', () => {
         e: [4, 5],
       })).to.be.true;
     });
+    it ('should unwrap src objects and assign the .src properties', () => {
+      var $obj2 = applyInterface({a: 1, b: 3});
+      var $obj3 = applyInterface({a: 2});
+      var result = $obj2.assign($obj3);
+      expect(isEqual(result, {a: 2, b: 3})).to.be.true;
+    });
   });
 
 });
