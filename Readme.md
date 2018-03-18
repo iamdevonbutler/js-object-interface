@@ -15,8 +15,8 @@ npm i --save js-object-interface
 ```javascript
 const applyInterface = require('js-object-interface');
 
-const obj = {a: 1,b: 2};
-var $obj = applyInterface(obj);
+const obj = {a: 1, b: 2};
+var $obj = applyInterface(obj, {customMethods});
 
 $obj.get();
 $obj.get('key');

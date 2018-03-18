@@ -27,13 +27,6 @@ describe('js-object-interface tests', () => {
       $obj.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.true;
     });
-    it ('should NOT clone the src obj when passing param3 as false', () => {
-      var obj1 = {a: 1};
-      var $obj1 = applyInterface(obj1, null, false);
-      $obj1.set('b', 2);
-      expect(isEqual(obj1, {a: 1})).to.be.false;
-      expect(isEqual(obj1, {a: 1, b: 2})).to.be.true;
-    });
   });
 
   describe('adding custom methods', () => {
