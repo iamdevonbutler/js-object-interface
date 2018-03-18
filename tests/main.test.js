@@ -30,20 +30,38 @@ describe('js-object-interface tests', () => {
   });
 
   describe('adding custom methods', () => {
-    it ('should add custom methods to your wrapped object', () => {
-      var obj1 = {a: 1};
-      var $obj = applyInterface(obj1, {
-        call() {
-          return 1;
-        },
-        apply() {
-          return 2;
-        },
-      });
-      expect($obj.call() === 1).to.be.true;
-      expect($obj.apply() === 2).to.be.true;
-      expect(isEqual($obj.src, obj1)).to.be.true;
+    var obj2 = {a: 1};
+    var $obj2 = applyInterface(obj2, {
+      call() {
+        return 1;
+      },
+      apply() {
+        return 2;
+      },
     });
+    it ('should add custom methods to your wrapped object', () => {
+      expect($obj2.call() === 1).to.be.true;
+      expect($obj2.apply() === 2).to.be.true;
+      expect(isEqual($obj2.src, obj2)).to.be.true;
+    });
+    it ('should pass along custom methods in a clone when wrap === true', () => {
+      expect($obj2.clone(true).call() === 1).to.be.true;
+      expect(Object.keys($obj2.clone()).indexOf('call') === -1).to.be.true;
+    });
+    it ('should pass along custom methods, in a .map() and .filter(), to its result', async () => {
+      var result;
+      result = $obj2.map((value, key, $value) => value, true);
+      expect(result.call).to.be.ok;
+
+      result = await $obj2.map(async (value, key, $value) => value, true);
+      expect(result.call).to.be.ok;
+
+      result = $obj2.filter((value, key, $value) => true, true);
+      expect(result.call).to.be.ok;
+
+      result = await $obj2.filter(async (value, key, $value) => value, true);
+      expect(result.call).to.be.ok;
+    })
   });
 
   describe('.src', () => {
