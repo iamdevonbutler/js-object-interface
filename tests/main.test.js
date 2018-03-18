@@ -27,12 +27,29 @@ describe('js-object-interface tests', () => {
       $obj.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.true;
     });
-    it ('should NOT clone the src obj when passing param2 as false', () => {
+    it ('should NOT clone the src obj when passing param3 as false', () => {
       var obj1 = {a: 1};
-      var $obj1 = applyInterface(obj1, false);
+      var $obj1 = applyInterface(obj1, null, false);
       $obj1.set('b', 2);
       expect(isEqual(obj1, {a: 1})).to.be.false;
       expect(isEqual(obj1, {a: 1, b: 2})).to.be.true;
+    });
+  });
+
+  describe('adding custom methods', () => {
+    it ('should add custom methods to your wrapped object', () => {
+      var obj1 = {a: 1};
+      var $obj = applyInterface(obj1, {
+        call() {
+          return 1;
+        },
+        apply() {
+          return 2;
+        },
+      });
+      expect($obj.call() === 1).to.be.true;
+      expect($obj.apply() === 2).to.be.true;
+      expect(isEqual($obj.src, obj1)).to.be.true;
     });
   });
 

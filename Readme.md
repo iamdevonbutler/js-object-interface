@@ -259,6 +259,23 @@ obj.set(obj.assign({a: 2}));
 
 * *View src (./lib/index.js) and tests (./tests/main.test.js) for a more detailed understanding of the API.*
 
+## Custom methods
+You can add custom method(s) to your Object.
+```javascript
+var obj1 = {a: 1};
+var $obj = applyInterface(obj1, {
+  call() {
+    return 1;
+  },
+  apply() {
+    return 2;
+  },
+});
+$obj.call() // result === 1
+$obj.apply() // result === 2
+
+```
+
 ## Performance
 
 Now I wouldn't consider the module to be a performance bottleneck, but I should mention that it is not optimized for high-performance applications. View src.
