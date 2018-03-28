@@ -42,8 +42,8 @@ describe('js-object-interface tests', () => {
         return this;
       },
     });
-    it ('should bind this as a reference to Object properties', () => {
-      expect(isEqual($obj2.this(), obj2)).to.be.true;
+    it ('should bind as a reference to the wrapped Object', () => {
+      expect(isEqual($obj2.this(), $obj2)).to.be.true;
     });
     it ('should add custom methods to your wrapped object', () => {
       expect($obj2.call() === 1).to.be.true;

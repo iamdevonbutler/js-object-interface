@@ -1,6 +1,6 @@
 {
   "name": "js-object-interface",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Wrap JS Objects to create a functional Array-like interface for iteration and whatnot",
   "main": "lib/index.js",
   "scripts": {
